@@ -17,7 +17,7 @@ const { Content, Footer } = Layout;
 
 const PassengerLayout: FC<LayoutProps> = ({ children }) => {
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { borderRadiusLG },
   } = theme.useToken();
 
   return (
@@ -31,7 +31,6 @@ const PassengerLayout: FC<LayoutProps> = ({ children }) => {
               <Content
                 className="h-screen overflow-hidden overflow-y-scroll my-24 mx-0 sm:mx-24  p-4"
                 style={{
-                  background: colorBgContainer,
                   borderRadius: borderRadiusLG,
                 }}
               >
