@@ -1,5 +1,10 @@
 "use client";
-import { HomeOutlined, LinkOutlined } from "@ant-design/icons";
+import {
+  BarChartOutlined,
+  HomeOutlined,
+  LinkOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,10 +40,14 @@ const LayoutSideBar = () => {
 
   const highlightSelectedItem = () => {
     switch (pathname) {
-      case "/dashboard":
+      case "/dashboard/links/create":
         return "1";
-      case "/dashboard/links":
+      case "/dashboard":
         return "2";
+      case "/dashboard/links":
+        return "3";
+      case "/dashboard/analytics":
+        return "4";
       default:
         return "1";
     }
@@ -66,6 +75,15 @@ const LayoutSideBar = () => {
 const PassengerMenu: MenuItems[] = [
   {
     key: "1",
+    icon: <PlusCircleOutlined />,
+    label: (
+      <Link href="/dashboard/links/create" className="text-white">
+        Create
+      </Link>
+    ),
+  },
+  {
+    key: "2",
     icon: <HomeOutlined />,
     label: (
       <Link href="/dashboard" className="text-white">
@@ -74,11 +92,20 @@ const PassengerMenu: MenuItems[] = [
     ),
   },
   {
-    key: "2",
+    key: "3",
     icon: <LinkOutlined />,
     label: (
       <Link href="/dashboard/links" className="text-white">
         Links
+      </Link>
+    ),
+  },
+  {
+    key: "4",
+    icon: <BarChartOutlined />,
+    label: (
+      <Link href="/dashboard/analytics" className="text-white">
+        Analytics
       </Link>
     ),
   },
