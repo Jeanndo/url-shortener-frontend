@@ -1,3 +1,4 @@
+import { MenuOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -7,7 +8,7 @@ const Navigation = () => {
       <div>
         <span className="text-4xl font-bold text-orange-500">bitly</span>
       </div>
-      <div>
+      <div className="hidden sm:block">
         <ul className="flex justify-center items-center gap-x-4">
           <li className="text-white font-bold">
             <span>Platiform</span>
@@ -23,7 +24,7 @@ const Navigation = () => {
           </li>
         </ul>
       </div>
-      <div>
+      <div className="hidden sm:block">
         <ul className="flex justify-center items-center gap-x-4">
           <li className="text-white">En</li>
           <li>
@@ -48,6 +49,9 @@ const Navigation = () => {
             </Link>
           </li>
         </ul>
+      </div>
+      <div className="block sm:hidden">
+        <MenuOutlined/>
       </div>
     </nav>
   );
