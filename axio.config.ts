@@ -11,7 +11,7 @@ instance.interceptors.request.use(
          * Get the token from local storage
          */
         const user = localStorage.getItem("user")!
-        const token = JSON.parse(user).token;
+        const token = JSON.parse(user).data.token;
 
         /**
          * Check if the request is not the login request
