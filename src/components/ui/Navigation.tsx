@@ -51,7 +51,7 @@ const Navigation = () => {
         </ul>
       </div>
       <div className="block sm:hidden">
-        <MenuOutlined/>
+        <MenuOutlined className="!text-white"/>
       </div>
     </nav>
   );
