@@ -1,10 +1,29 @@
-import { BarChartOutlined, CalendarOutlined, CopyOutlined, EditOutlined, FileOutlined, GlobalOutlined, LockOutlined, MoreOutlined, QrcodeOutlined,TagOutlined } from "@ant-design/icons";
+import {
+  BarChartOutlined,
+  CalendarOutlined,
+  CopyOutlined,
+  EditOutlined,
+  FileOutlined,
+  GlobalOutlined,
+  LockOutlined,
+  MoreOutlined,
+  QrcodeOutlined,
+  TagOutlined,
+} from "@ant-design/icons";
 import { Avatar, Button } from "antd";
 import Link from "next/link";
-import React from "react";
+import React, { FC } from "react";
 import ShareLinkModal from "../modals/ShareLinkModal";
+import moment from "moment";
 
-const LinkCard = () => {
+interface CardProps {
+  title: string;
+  short_code: string;
+  long_url: string;
+  createdAt:string
+}
+
+const UrlCard: FC<CardProps> = ({ title, short_code, long_url,createdAt }) => {
   return (
     <div className="flex justify-between bg-white border border-gray-200 p-4">
       <div className="flex justify-between gap-x-4">
@@ -13,18 +32,26 @@ const LinkCard = () => {
         </div>
         <div className="flex flex-col justify-between items-start">
           <div className="capitalize font-bold">
-            <Link href="/" className="!text-black hover:!underline !text-xl">
-              Title
+            <Link
+              href={long_url}
+              target="_blank"
+              className="!text-black hover:!underline !text-xl"
+            >
+              {title}
             </Link>
           </div>
-          <div className="capitalize font-bold">
-            <Link href="/" className="">
-              Short Link
+          <div className="font-bold">
+            <Link href={long_url} target="_blank" className="hover:!underline">
+              btit.ly/{short_code}
             </Link>
           </div>
           <div>
-            <Link href="/" className="!text-black">
-              Original Link
+            <Link
+              href={long_url}
+              target="_blank"
+              className="!text-black hover:!underline"
+            >
+              {long_url}
             </Link>
           </div>
           <div className="mt-4 flex justify-between items-center gap-x-4">
@@ -35,7 +62,7 @@ const LinkCard = () => {
               <LockOutlined /> Click data
             </div>
             <div>
-              <CalendarOutlined /> Mar 12,2025
+              <CalendarOutlined /> {moment(createdAt).format('ll')}
             </div>
             <div>
               <TagOutlined /> No tags
@@ -48,7 +75,7 @@ const LinkCard = () => {
           <Button icon={<CopyOutlined />} iconPosition="start">
             Copy
           </Button>
-          <ShareLinkModal/>
+          <ShareLinkModal />
           <Button>
             <EditOutlined />
           </Button>
@@ -65,4 +92,4 @@ const LinkCard = () => {
   );
 };
 
-export default LinkCard;
+export default UrlCard;

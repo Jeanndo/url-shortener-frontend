@@ -7,10 +7,13 @@ import {
   LockOutlined,
   SearchOutlined,
   DownOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import Link from "next/link";
-import LinkCard from "@/components/ui/LinkCard";
+import { useQuery } from "@tanstack/react-query";
+import instance from "../../../../axio.config";
+import UrlCard from "@/components/ui/UrlCard";
 
 const items: MenuProps["items"] = [
   {
@@ -27,18 +30,42 @@ const items: MenuProps["items"] = [
   },
 ];
 
+interface UrlDataType {
+  id: string;
+  user_id: string;
+  title:string;
+  short_code: string;
+  long_url: string;
+  clicks: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+const fetchUrls = async () => {
+  const { data } = await instance.get("/urls");
+  return data;
+};
+
 const Links = () => {
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["urls"],
+    queryFn: fetchUrls,
+  });
+
+
   return (
     <Fragment>
       <div className="max-w-5xl mx-auto my-auto">
         <div className="flex justify-between mb-10">
           <div>
-            <h2 className="text-black text-3xl font-bold mb-3"> Super Links</h2>
+            <h2 className="text-black text-3xl font-bold mb-3"> Bitly Links</h2>
 
             <Space direction="horizontal">
               <Input
                 size="large"
-                placeholder="large size"
+                placeholder="search url"
                 prefix={<SearchOutlined />}
               />
               <Button
@@ -60,38 +87,54 @@ const Links = () => {
             </Space>
           </div>
           <div>
-            <Button type="primary">Create Link</Button>
+            <Link href="/dashboard/links/create" className="!bg-blue-500 py-2 px-4 !text-white">Create Link</Link>
           </div>
         </div>
 
-        <div>
-          <div className="flex justify-between mb-4">
-            <div className="flex justify-between items-center gap-x-2">
-              <div>0 selcted</div>
-              <div>
-                <LockOutlined /> Export
+        {error ? (
+          <p className="text-xl text-red-500 text-center">{error.message}</p>
+        ) : (
+          <div>
+            <div className="flex justify-between mb-4">
+              <div className="flex justify-between items-center gap-x-2">
+                <div>0 selcted</div>
+                <div>
+                  <LockOutlined /> Export
+                </div>
+                <div>Hide</div>
+                <div>Tag</div>
               </div>
-              <div>Hide</div>
-              <div>Tag</div>
+              <div>
+                <Dropdown menu={{ items }} trigger={["click"]}>
+                  <Button onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      Show: Active
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+              </div>
             </div>
-            <div>
-              <Dropdown menu={{ items }} trigger={["click"]}>
-                <Button onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    Show: Active
-                    <DownOutlined />
-                  </Space>
-                </Button>
-              </Dropdown>
-            </div>
+            {/* Link Card */}
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <SyncOutlined className="!text-4xl !text-blue-500" spin />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-y-4">
+                {data.data.rows.map((item: UrlDataType) => (
+                  <UrlCard
+                    key={item.id}
+                    title={item.title}
+                    short_code={item.short_code}
+                    long_url={item.long_url}
+                    createdAt={item.createdAt}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          {/* Link Card */}
-          <div className="flex flex-col gap-y-4">
-          {[1, 2, 3, 4].map((link) => (
-            <LinkCard key={link} />
-          ))}
-          </div>
-        </div>
+        )}
       </div>
     </Fragment>
   );

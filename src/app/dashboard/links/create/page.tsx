@@ -16,10 +16,10 @@ const NewLink = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const mutation = useMutation({
-    mutationFn: async ({ long_url }: { long_url: string }) => {
+    mutationFn: async ({ long_url,title }: { long_url: string,title:string }) => {
       setLoading(true);
 
-      const response = await instance.post(`/urls/shorten`, { long_url });
+      const response = await instance.post(`/urls/shorten`, { long_url,title });
       return response.data;
     },
 
@@ -39,8 +39,8 @@ const NewLink = () => {
     },
   });
 
-  const onFinish = (values: { long_url: string }) => {
-    mutation.mutate({ long_url: values.long_url });
+  const onFinish = (values: { long_url: string,title:string }) => {
+    mutation.mutate({ long_url: values.long_url,title:values.title });
   };
 
   return (
@@ -67,7 +67,7 @@ const NewLink = () => {
         </div>
 
         {/* Form */}
-        <div className="bg-white  p-2 border border-gray-200">
+        <div className="bg-white  p-2 border border-gray-200 rounded-md">
           <Form
             form={form}
             name="Register Driver Form"
@@ -75,17 +75,30 @@ const NewLink = () => {
             onFinish={onFinish}
             initialValues={{
               long_url: "",
+              title:""
             }}
           >
             <Row gutter={[16, 8]}>
-              <Col xs={24}>
+              <Col xs={24} sm={12}>
                 <Form.Item
+                  label="Destination"
                   name="long_url"
                   rules={[{ required: true, message: "Enter original url" }]}
                 >
                   <Input placeholder="Enter original url" className="!h-10" />
                 </Form.Item>
               </Col>
+              <Col xs={24} sm={12}>
+              <Form.Item
+                  label="Title"
+                  name="title"
+                  rules={[{ required: true, message: "Enter Title" }]}
+                >
+                  <Input placeholder="Enter Title" className="!h-10" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[16, 8]}>
               <Col xs={24}>
                 <Form.Item>
                   <Button
