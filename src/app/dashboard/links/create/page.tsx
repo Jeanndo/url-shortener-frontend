@@ -7,10 +7,13 @@ import React, { Fragment, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import instance from "../../../../../axio.config";
+import { useGetCsrufToken } from "@/lib/hooks";
 
 const NewLink = () => {
   const [form] = Form.useForm();
 
+   const {csrfToken} = useGetCsrufToken()
+  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [shortUrl, setShortUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +22,11 @@ const NewLink = () => {
     mutationFn: async ({ long_url,title }: { long_url: string,title:string }) => {
       setLoading(true);
 
-      const response = await instance.post(`/urls/shorten`, { long_url,title });
+      const response = await instance.post(`/urls/shorten`, { long_url,title },{
+        headers:{
+          "x-csrf-token": csrfToken.csrfToken,
+        }
+      });
       return response.data;
     },
 
@@ -34,7 +41,7 @@ const NewLink = () => {
       setLoading(false);
       setIsModalOpen(false);
       toast.error(
-        error.response?.data?.message || "Login failed. Check credentials."
+        error.response?.data?.message || "some thing went wrong"
       );
     },
   });

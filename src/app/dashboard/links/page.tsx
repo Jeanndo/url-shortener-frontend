@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import instance from "../../../../axio.config";
 import UrlCard from "@/components/ui/UrlCard";
+import { useGetCsrufToken } from "@/lib/hooks";
 
 const items: MenuProps["items"] = [
   {
@@ -42,17 +43,25 @@ interface UrlDataType {
   deletedAt: string | null;
 }
 
-const fetchUrls = async () => {
-  const { data } = await instance.get("/urls");
-  return data;
-};
+
 
 const Links = () => {
+  const {csrfToken} = useGetCsrufToken()
+
+  const fetchUrls = async () => {
+    const { data } = await instance.get("/urls",{
+      headers:{
+        "x-csrf-token": csrfToken.csrfToken,
+      }
+    });
+    return data;
+  };
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["urls"],
     queryFn: fetchUrls,
   });
+
 
 
   return (
@@ -61,7 +70,6 @@ const Links = () => {
         <div className="flex justify-between mb-10">
           <div>
             <h2 className="text-black text-3xl font-bold mb-3"> Bitly Links</h2>
-
             <Space direction="horizontal">
               <Input
                 size="large"
