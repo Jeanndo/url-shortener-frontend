@@ -37,7 +37,6 @@ const Register = () => {
       router.push("/login");
     },
     onError: (error: { response?: { data?: { message?: string } } }) => {
-      console.log("error",error)
       setLoading(false);
       toast.error(error.response?.data?.message || "Signup failed. Try again.");
     },

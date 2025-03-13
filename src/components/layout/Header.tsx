@@ -6,13 +6,28 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import { Button, Layout } from "antd";
-import React, { FC } from "react";
+import { useRouter } from "next/navigation";
+import React, { FC, useEffect } from "react";
 
 const { Header } = Layout;
 
 const LayoutHeader: FC = () => {
     
   const { collapsed, toggleMenu } = useShortener();
+  const router = useRouter()
+
+  const handleLogout = () =>{
+    localStorage.clear()
+    router.push("/login")
+
+  }
+
+  useEffect(()=>{
+    const authenticatedUser = localStorage.getItem('user')
+    if(!authenticatedUser){
+      router.push("/login")
+    }
+  },[router])
 
   return (
     <Header className="!bg-white shadow-md !px-8  mx-0 w-full flex  justify-between items-center fixed top-0 z-50">
@@ -34,6 +49,7 @@ const LayoutHeader: FC = () => {
           variant="solid"
           icon={<LogoutOutlined />}
           size="small"
+          onClick={handleLogout}
         >
           {" "}
           Logout
