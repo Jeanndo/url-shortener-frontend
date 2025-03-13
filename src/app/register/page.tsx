@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import instance from "../../../axio.config";
 
 const Register = () => {
   const [form] = Form.useForm();
@@ -25,8 +25,8 @@ const Register = () => {
       username: string;
     }) => {
       setLoading(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}users/auth/register`,
+      const response = await instance.post(
+        `/users/auth/register`,
         { username, email, password }
       );
       return response.data;

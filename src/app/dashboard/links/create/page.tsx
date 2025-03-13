@@ -4,17 +4,43 @@ import { FilePdfOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row } from "antd";
 import Link from "next/link";
 import React, { Fragment, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import instance from "../../../../../axio.config";
 
 const NewLink = () => {
   const [form] = Form.useForm();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [shortUrl, setShortUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const mutation = useMutation({
+    mutationFn: async ({ long_url }: { long_url: string }) => {
+      setLoading(true);
+
+      const response = await instance.post(`/urls/shorten`, { long_url });
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      setLoading(false);
+      toast.success(data.message);
+      setShortUrl(data.data.short_code);
+      setIsModalOpen(true);
+    },
+
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      setLoading(false);
+      setIsModalOpen(false);
+      toast.error(
+        error.response?.data?.message || "Login failed. Check credentials."
+      );
+    },
+  });
 
   const onFinish = (values: { long_url: string }) => {
-    console.log("values", values);
-    setShortUrl(values.long_url);
-    setIsModalOpen(true);
+    mutation.mutate({ long_url: values.long_url });
   };
 
   return (
@@ -66,6 +92,7 @@ const NewLink = () => {
                     type="primary"
                     className="!h-10 w-40 rounded-none !font-bold uppercase"
                     htmlType="submit"
+                    loading={loading}
                   >
                     Shorten It
                   </Button>

@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import instance from "../../../axio.config";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -23,8 +23,8 @@ const Login = () => {
       password: string;
     }) => {
       setLoading(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}users/auth/login`,
+      const response = await instance.post(
+        `/users/auth/login`,
         { email, password },
         { withCredentials: true }
       );

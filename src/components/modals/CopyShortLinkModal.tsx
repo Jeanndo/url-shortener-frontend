@@ -38,7 +38,7 @@ const CopyLinkModal: FC<ModalProps> = ({
             Copy the link below to share it or choose a platform to share it to.
           </p>
           <div className="flex flex-col justify-center items-center bg-blue-50 p-2">
-            <p className="font-bold text-blue-500 mb-4 text-xl">super.url/{shortUrl}</p>
+            <p className="font-bold text-blue-500 mb-4 text-xl">b.tly/{shortUrl}</p>
             
             <div className="flex justify-center items-center gap-x-4 ">
             <Button
