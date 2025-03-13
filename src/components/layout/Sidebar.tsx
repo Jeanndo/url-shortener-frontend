@@ -1,6 +1,5 @@
 "use client";
 import {
-  BarChartOutlined,
   HomeOutlined,
   LinkOutlined,
   PlusCircleOutlined,
@@ -46,8 +45,6 @@ const LayoutSideBar = () => {
         return "2";
       case "/dashboard/links":
         return "3";
-      case "/dashboard/analytics":
-        return "4";
       default:
         return "1";
     }
@@ -97,15 +94,6 @@ const PassengerMenu: MenuItems[] = [
     label: (
       <Link href="/dashboard/links" className="text-white">
         Links
-      </Link>
-    ),
-  },
-  {
-    key: "4",
-    icon: <BarChartOutlined />,
-    label: (
-      <Link href="/dashboard/analytics" className="text-white">
-        Analytics
       </Link>
     ),
   },

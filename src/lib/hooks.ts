@@ -1,6 +1,8 @@
 import { AppContext } from "@/context/appContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import instance from "../../axio.config";
 
 export const useShortener = () => {
   const context = useContext(AppContext);
@@ -48,3 +50,23 @@ export const useClipboard = (textToCopy: string) => {
     copyText,
   };
 };
+
+
+const fetchToken = async () => {
+  const {data} = await instance.get("/csrf");
+  return data;
+};
+
+export const useGetCsrufToken = ()=>{
+
+  const {data} = useQuery({
+      queryKey: ["csrf"],
+      queryFn: fetchToken,
+    });
+
+    
+    return {
+      csrfToken:data
+    }
+
+}

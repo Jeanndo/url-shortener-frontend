@@ -36,8 +36,7 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
         <div className="flex flex-col justify-between items-start">
           <div className="capitalize font-bold">
             <Link
-              href={long_url}
-              target="_blank"
+              href={`/dashboard/analytics/${short_code}`}
               className="!text-black hover:!underline !text-xl"
             >
               {title}
@@ -59,7 +58,9 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
           </div>
           <div className="mt-4 flex justify-between items-center gap-x-4">
             <div>
-              <BarChartOutlined />
+              <Link href={`/dashboard/analytics/${short_code}`}>
+                <BarChartOutlined />
+              </Link>
             </div>
             <div>
               <LockOutlined /> Click data
