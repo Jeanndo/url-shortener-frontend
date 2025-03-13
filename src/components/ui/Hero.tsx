@@ -3,17 +3,16 @@ import { ArrowRightOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC } from "react";
+import React, { FC} from "react";
 
 const Hero: FC = () => {
   const [form] = Form.useForm();
-
   const onFinish = (values: { long_url: string }) => {
     console.log("values", values);
   };
 
   return (
-    <section className="bg-[#031f39]">
+    <section className="bg-[#031f39] pt-20">
       <div className="py-20 bg-[url('/images/stars.svg')] bg-contain bg-no-repeat">
         <div className="flex flex-col justify-center items-center max-w-5xl mx-auto my-auto">
           <div>
