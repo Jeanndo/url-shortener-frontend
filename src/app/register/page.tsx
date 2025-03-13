@@ -2,12 +2,56 @@
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
   const [form] = Form.useForm();
-  const onFinish = (values: { email: string; password: string }) => {
-    console.log("values", values);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+      username,
+    }: {
+      email: string;
+      password: string;
+      username: string;
+    }) => {
+      setLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}users/auth/register`,
+        { username, email, password }
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setLoading(false);
+      toast.success(data.message);
+      router.push("/login");
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      setLoading(false);
+      toast.error(error.response?.data?.message || "Signup failed. Try again.");
+    },
+  });
+
+  const onFinish = (values: {
+    email: string;
+    password: string;
+    username: string;
+  }) => {
+    mutation.mutate({
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    });
   };
 
   return (
@@ -15,12 +59,14 @@ const Register = () => {
       <div className="max-w-screen-xl  bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div>
-            <Image
-              src="/images/bitlyLogo.png"
-              width={96}
-              height={48}
-              alt="logo"
-            />
+            <Link href="/">
+              <Image
+                src="/images/bitlyLogo.png"
+                width={96}
+                height={48}
+                alt="logo"
+              />
+            </Link>
           </div>
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold mb-2">
@@ -90,8 +136,16 @@ const Register = () => {
                   initialValues={{
                     email: "",
                     password: "",
+                    username: "",
                   }}
                 >
+                  <Form.Item
+                    label="User Name"
+                    name="username"
+                    rules={[{ required: true, message: "Enter user name" }]}
+                  >
+                    <Input className="!py-2" placeholder="user name" />
+                  </Form.Item>
                   <Form.Item
                     label="Email"
                     name="email"
@@ -111,6 +165,7 @@ const Register = () => {
                       htmlType="submit"
                       className="w-full !py-5"
                       type="primary"
+                      loading={loading}
                     >
                       Create Account
                     </Button>
