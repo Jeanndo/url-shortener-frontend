@@ -31,12 +31,13 @@ const Register = () => {
       );
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setLoading(false);
-      toast.success(data.message);
+      toast.success("Registered successfully");
       router.push("/login");
     },
     onError: (error: { response?: { data?: { message?: string } } }) => {
+      console.log("error",error)
       setLoading(false);
       toast.error(error.response?.data?.message || "Signup failed. Try again.");
     },
