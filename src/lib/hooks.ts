@@ -28,3 +28,23 @@ export const useCheckAuth = () => {
 
   return isAuthenticated;
 };
+
+export const useClipboard = (textToCopy: string) => {
+
+  const [copied, setCopied] = useState(false);
+
+  const copyText = async () => {
+    try {
+      await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_API_URL}/urls/${textToCopy}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
+
+  return {
+    copied,
+    copyText,
+  };
+};
