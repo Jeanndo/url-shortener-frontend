@@ -2,12 +2,52 @@
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      setLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}users/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      setLoading(false);
+      toast.success(data.message);
+      localStorage.setItem("user", JSON.stringify(data));
+      router.push("/dashboard/links/create");
+    },
+
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      setLoading(false);
+      toast.warn(
+        error.response?.data?.message || "Login failed. Check credentials."
+      );
+    },
+  });
+
   const onFinish = (values: { email: string; password: string }) => {
-    console.log("values", values);
+    mutation.mutate({ email: values.email, password: values.password });
   };
 
   return (
@@ -15,16 +55,18 @@ const Login = () => {
       <div className="max-w-screen-xl  bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div>
-            <Image
-              src="/images/bitlyLogo.png"
-              width={96}
-              height={48}
-              alt="logo"
-            />
+            <Link href="/">
+              <Image
+                src="/images/bitlyLogo.png"
+                width={96}
+                height={48}
+                alt="logo"
+              />
+            </Link>
           </div>
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold mb-2">
-              Create your account
+              Log in and start sharing
             </h1>
             <p className="text-sm">
               Don&apos;t have an account?{" "}
@@ -107,6 +149,7 @@ const Login = () => {
                       htmlType="submit"
                       className="w-full !py-5"
                       type="primary"
+                      loading={loading}
                     >
                       Login
                     </Button>
