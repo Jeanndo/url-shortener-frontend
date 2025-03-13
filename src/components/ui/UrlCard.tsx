@@ -15,15 +15,18 @@ import Link from "next/link";
 import React, { FC } from "react";
 import ShareLinkModal from "../modals/ShareLinkModal";
 import moment from "moment";
+import { useClipboard } from "@/lib/hooks";
 
 interface CardProps {
   title: string;
   short_code: string;
   long_url: string;
-  createdAt:string
+  createdAt: string;
 }
 
-const UrlCard: FC<CardProps> = ({ title, short_code, long_url,createdAt }) => {
+const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
+  const { copied, copyText } = useClipboard(short_code);
+
   return (
     <div className="flex justify-between bg-white border border-gray-200 p-4">
       <div className="flex justify-between gap-x-4">
@@ -62,7 +65,7 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url,createdAt }) => {
               <LockOutlined /> Click data
             </div>
             <div>
-              <CalendarOutlined /> {moment(createdAt).format('ll')}
+              <CalendarOutlined /> {moment(createdAt).format("ll")}
             </div>
             <div>
               <TagOutlined /> No tags
@@ -72,8 +75,12 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url,createdAt }) => {
       </div>
       <div>
         <div className="flex justify-between items-center gap-x-4">
-          <Button icon={<CopyOutlined />} iconPosition="start">
-            Copy
+          <Button
+            icon={<CopyOutlined />}
+            iconPosition="start"
+            onClick={copyText}
+          >
+            {copied ? "Copied!" : "Copy"}
           </Button>
           <ShareLinkModal />
           <Button>
