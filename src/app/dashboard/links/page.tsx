@@ -12,9 +12,8 @@ import {
 import type { MenuProps } from "antd";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import instance from "../../../../axio.config";
 import UrlCard from "@/components/ui/UrlCard";
-import { useGetCsrufToken } from "@/lib/hooks";
+import {usePrivateAxios } from "@/lib/hooks";
 
 const items: MenuProps["items"] = [
   {
@@ -46,14 +45,10 @@ interface UrlDataType {
 
 
 const Links = () => {
-  const {csrfToken} = useGetCsrufToken()
+  const privateInstance = usePrivateAxios()
 
   const fetchUrls = async () => {
-    const { data } = await instance.get("/urls",{
-      headers:{
-        "x-csrf-token": csrfToken.csrfToken,
-      }
-    });
+    const { data } = await privateInstance.get("/urls");
     return data;
   };
 
@@ -67,7 +62,7 @@ const Links = () => {
   return (
     <Fragment>
       <div className="max-w-5xl mx-auto my-auto">
-        <div className="flex justify-between mb-10">
+        <div className="flex flex-col-reverse gap-y-4 lg:flex-row justify-between mb-10">
           <div>
             <h2 className="text-black text-3xl font-bold mb-3"> Bitly Links</h2>
             <Space direction="horizontal">
@@ -103,7 +98,7 @@ const Links = () => {
           <p className="text-xl text-red-500 text-center">{error.message}</p>
         ) : (
           <div>
-            <div className="flex justify-between mb-4">
+            <div className="flex flex-col-reverse gap-y-2 md:flex-row md:gap-y-0 justify-between mb-4">
               <div className="flex justify-between items-center gap-x-2">
                 <div>0 selcted</div>
                 <div>
@@ -130,7 +125,7 @@ const Links = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-y-4">
-                {data.data.rows.map((item: UrlDataType) => (
+                {data?.data?.rows?.map((item: UrlDataType) => (
                   <UrlCard
                     key={item.id}
                     title={item.title}

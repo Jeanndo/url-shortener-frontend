@@ -2,7 +2,6 @@
 import { Col, Row } from "antd";
 import { useParams } from "next/navigation";
 import React from "react";
-import instance from "../../../../../axio.config";
 import { useQuery } from "@tanstack/react-query";
 import {
   ClockCircleOutlined,
@@ -12,8 +11,7 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 import Link from "next/link";
-import { useGetCsrufToken } from "@/lib/hooks";
-
+import {usePrivateAxios } from "@/lib/hooks";
 
 interface AnalyticsType {
   id: string;
@@ -25,15 +23,10 @@ interface AnalyticsType {
 }
 const LinkAnalytics = () => {
   const { shortCode } = useParams<{ shortCode: string }>();
-   const {csrfToken} = useGetCsrufToken()
-    
-
+   const privateInstance = usePrivateAxios()
+     
   const fetchUrls = async () => {
-    const { data } = await instance.get(`/urls/analytics/${shortCode}`,{
-      headers:{
-        "x-csrf-token": csrfToken.csrfToken,
-      }
-    });
+    const { data } = await privateInstance.get(`/urls/analytics/${shortCode}`);
     return data;
   };
 

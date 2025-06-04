@@ -2,11 +2,9 @@ import {
   BarChartOutlined,
   CalendarOutlined,
   CopyOutlined,
-  EditOutlined,
   FileOutlined,
   GlobalOutlined,
   LockOutlined,
-  MoreOutlined,
   QrcodeOutlined,
   TagOutlined,
 } from "@ant-design/icons";
@@ -16,6 +14,8 @@ import React, { FC } from "react";
 import ShareLinkModal from "../modals/ShareLinkModal";
 import moment from "moment";
 import { useClipboard } from "@/lib/hooks";
+import UpdateLinkModal from "../modals/UpdateLinkModal";
+import DeleteLinkModal from "../modals/deleteModal";
 
 interface CardProps {
   title: string;
@@ -28,8 +28,8 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
   const { copied, copyText } = useClipboard(short_code);
 
   return (
-    <div className="flex justify-between bg-white border border-gray-200 p-4">
-      <div className="flex justify-between gap-x-4">
+    <div className="flex flex-col gap-y-4 lg:flex-row justify-between bg-white border border-gray-200 p-4  overflow-x-scroll sm:overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-start gap-x-4">
         <div>
           <Avatar icon={<GlobalOutlined />} />
         </div>
@@ -42,7 +42,7 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
               {title}
             </Link>
           </div>
-          <div className="font-bold">
+          <div className="font-bold ">
             <Link href={long_url} target="_blank" className="hover:!underline">
               btit.ly/{short_code}
             </Link>
@@ -56,14 +56,15 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
               {long_url}
             </Link>
           </div>
-          <div className="mt-4 flex justify-between items-center gap-x-4">
+          <div className="mt-4  flex justify-between items-center gap-x-2">
             <div>
               <Link href={`/dashboard/analytics/${short_code}`}>
                 <BarChartOutlined />
               </Link>
             </div>
             <div>
-              <LockOutlined /> Click data
+              <LockOutlined />
+               Click data
             </div>
             <div>
               <CalendarOutlined /> {moment(createdAt).format("ll")}
@@ -75,7 +76,7 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
         </div>
       </div>
       <div>
-        <div className="flex justify-between items-center gap-x-4">
+        <div className="flex justify-start lg:justify-between items-center gap-x-1 lg:gap-x-4">
           <Button
             icon={<CopyOutlined />}
             iconPosition="start"
@@ -84,12 +85,8 @@ const UrlCard: FC<CardProps> = ({ title, short_code, long_url, createdAt }) => {
             {copied ? "Copied!" : "Copy"}
           </Button>
           <ShareLinkModal />
-          <Button>
-            <EditOutlined />
-          </Button>
-          <Button type="default">
-            <MoreOutlined />
-          </Button>
+          <UpdateLinkModal long_url={long_url} shortCode={short_code}/>
+          <DeleteLinkModal shortCode={short_code}/>
         </div>
         <div className="flex justify-center items-center gap-x-4 mt-10">
           <QrcodeOutlined className="cursor-pointer" />
