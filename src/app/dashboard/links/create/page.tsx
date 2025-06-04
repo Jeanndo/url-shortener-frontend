@@ -6,13 +6,12 @@ import Link from "next/link";
 import React, { Fragment, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import instance from "../../../../../axio.config";
-import { useGetCsrufToken } from "@/lib/hooks";
+import {usePrivateAxios } from "@/lib/hooks";
 
 const NewLink = () => {
   const [form] = Form.useForm();
 
-   const {csrfToken} = useGetCsrufToken()
+  const privateInstance = usePrivateAxios()
   
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [shortUrl, setShortUrl] = useState<string>("");
@@ -22,11 +21,7 @@ const NewLink = () => {
     mutationFn: async ({ long_url,title }: { long_url: string,title:string }) => {
       setLoading(true);
 
-      const response = await instance.post(`/urls/shorten`, { long_url,title },{
-        headers:{
-          "x-csrf-token": csrfToken.csrfToken,
-        }
-      });
+      const response = await privateInstance.post(`/urls/shorten`, { long_url,title });
       return response.data;
     },
 

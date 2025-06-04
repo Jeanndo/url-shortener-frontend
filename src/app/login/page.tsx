@@ -7,13 +7,16 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import instance from "../../../axio.config";
+import { useAuth } from "@/context/providers/AuthProvider";
 
 const Login = () => {
 
   const [form] = Form.useForm();
   const router = useRouter();
-
+  const { setAuth,auth } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+
+  console.log("AUTH",auth)
 
   const mutation = useMutation({
 
@@ -28,15 +31,19 @@ const Login = () => {
       const response = await instance.post(
         `/users/auth/login`,
         { email, password },
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers:{'Content-Type':'application/json'}
+         }
       );
       return response.data;
     },
 
-    onSuccess: (data) => {
+    onSuccess: ({data:{token,user},message}) => {
       setLoading(false);
-      toast.success(data.message);
-      localStorage.setItem("user", JSON.stringify(data));
+      toast.success(message);
+      setAuth({user,token})
+      localStorage.setItem("user", user.username);
       router.push("/dashboard/links/create");
     },
 
@@ -48,8 +55,9 @@ const Login = () => {
     },
   });
 
-  const onFinish = (values: { email: string; password: string }) => {
+  const onFinish = async(values: { email: string; password: string }) => {
     mutation.mutate({ email: values.email, password: values.password });
+    // await login(values.email, values.password);
   };
 
   return (

@@ -5,6 +5,7 @@ import { ConfigProvider } from "antd";
 import { Montserrat } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
+import { AuthProvider } from "@/context/providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Link shortener",
@@ -17,7 +18,6 @@ const montserrat = Montserrat({
   adjustFontFallback: false,
   display: "swap",
 });
-
 
 export default function RootLayout({
   children,
@@ -38,7 +38,7 @@ export default function RootLayout({
           <AntdRegistry>
             <ToastContainer position="top-center" />
             <QueryProvider>
-            {children}
+              <AuthProvider>{children}</AuthProvider>
             </QueryProvider>
           </AntdRegistry>
         </ConfigProvider>

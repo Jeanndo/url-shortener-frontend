@@ -31,7 +31,7 @@ const Navigation = () => {
       <div>
         <span className="text-4xl font-bold text-orange-500">bitly</span>
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <ul className="flex justify-center items-center gap-x-4">
           <li className={navScrolled?"text-black font-bold":"text-white font-bold"}>
             <span>Platiform</span>
@@ -73,7 +73,7 @@ const Navigation = () => {
           </li>
         </ul>
       </div>
-      <div className="block sm:hidden">
+      <div className="block md:hidden">
         <MenuOutlined className="!text-white" />
       </div>
     </nav>
